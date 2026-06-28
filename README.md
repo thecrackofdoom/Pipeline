@@ -72,6 +72,8 @@ The pipeline follows the **Lakehouse medallion pattern**, with each layer materi
 
 ![](docs/screenshots/ks_gini_metrics.png)
 
+> **Note:** The Logistic Regression baseline achieves higher accuracy than the XGBoost models (0.815 vs 0.788) but recalls only 32% of defaulters at the 0.5 threshold — a textbook illustration of why accuracy is misleading on imbalanced credit data and why KS/Gini are preferred.
+
 ### Confusion Matrix + ROC (Best Model)
 
 ![](docs/screenshots/confusion_mat_roc_best.png)
@@ -80,7 +82,7 @@ The pipeline follows the **Lakehouse medallion pattern**, with each layer materi
 
 ![](docs/screenshots/scatter_accuracy_vs_recall_default_rate.png)
 
-> Sampling-based class balancing improves recall on defaults at the cost of overall accuracy and probability calibration. The normal sampling strategy with `scale_pos_weight=3` was selected as the final model because it preserves probability calibration — critical when the score itself is the deliverable.
+> Sampling-based class balancing improves recall on defaults at the cost of overall accuracy and probability calibration. The normal sampling strategy with `scale_pos_weight=3` was selected as the final model because it preserves probability calibration — critical when the score itself is the deliverable. scale_pos_weight=3 shifts XGBoost's decision boundary more effectively than data-level resampling (Manual Oversample, SMOTE) on this dataset — yielding ~50% higher recall at a 1–2 percentage-point accuracy cost.
 
 ---
 
@@ -143,7 +145,9 @@ Implementations are in src/metrics.py.
 ### Individual Prediction Explanations
 **Waterfall plot** — cascading feature contributions for a single applicant:
 
-![](docs/screenshots/shap_waterflow.png)
+![](docs/screenshots/shap_waterfall.png)
+> Native XGBoost importance (gain-based) and SHAP-based importance rank features differently. Notably, LIMIT_BAL (credit line) ranks 8th by gain but 2nd by SHAP magnitude. This reflects a known distinction: gain measures how often a feature is used to make splits, while SHAP captures the average magnitude of its impact on the model's output. LIMIT_BAL likely appears in fewer splits but exerts a strong, consistent influence across many predictions — typical of a continuous feature with broad, smooth effects vs. the binary-like payment-delay features which create sharp splits.
+
 
 **Force plot** — additive decomposition from base value to prediction:
 
