@@ -1,5 +1,9 @@
 # Credit Default Risk Pipeline 🏦
 
+> 🏗️ **Built it:** Bronze → Silver → Gold on Databricks with Spark Declarative Pipelines  
+> 🧠 **Modeled it:** XGBoost + LR baseline, MLflow-tracked, SHAP-explained  
+> 📚 **Benchmarked it:** AUC 0.78  •  KS 0.43  •  Gini 0.56 — at parity with Yeh & Lien (2009), without the leakage seen in newer claims of 95%+ accuracy
+
 End-to-end credit default risk pipeline on **Databricks Lakehouse**, featuring a Bronze/Silver/Gold medallion architecture orchestrated via **Spark Declarative Pipelines (SDP)**, **MLflow** experiment tracking, **XGBoost + Logistic Regression** models, and **SHAP**-based interpretability — benchmarked against the original Yeh & Lien (2009) academic baseline.
 
 [![](https://img.shields.io/badge/Databricks-FF3621?logo=databricks&logoColor=white)]()
